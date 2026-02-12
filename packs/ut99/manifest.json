@@ -1,0 +1,54 @@
+{
+  "name": "ut99",
+  "display_name": "UT99 Announcer",
+  "categories": {
+    "greeting": {
+      "sounds": [
+        { "file": "prepare.wav", "line": "Prepare for battle!" },
+        { "file": "firstblood.wav", "line": "First blood!" },
+        { "file": "proceed.wav", "line": "Proceed!" }
+      ]
+    },
+    "acknowledge": {
+      "sounds": [
+        { "file": "dominating.wav", "line": "Dominating!" },
+        { "file": "killingspree.wav", "line": "Killing spree!" },
+        { "file": "rampage.wav", "line": "Rampage!" },
+        { "file": "unstoppable.wav", "line": "Unstoppable!" },
+        { "file": "doublekill.wav", "line": "Double kill!" },
+        { "file": "multikill.wav", "line": "Multi kill!" },
+        { "file": "triplekill.wav", "line": "Triple kill!" }
+      ]
+    },
+    "complete": {
+      "sounds": [
+        { "file": "winner.wav", "line": "You are the winner!" },
+        { "file": "godlike.wav", "line": "Godlike!" }
+      ]
+    },
+    "error": {
+      "sounds": [
+        { "file": "lostmatch.wav", "line": "You have lost the match." },
+        { "file": "failed.wav", "line": "Failed!" },
+        { "file": "lastplace.wav", "line": "Last place!" }
+      ]
+    },
+    "permission": {
+      "sounds": [
+        { "file": "headshot.wav", "line": "Headshot!" }
+      ]
+    },
+    "resource_limit": {
+      "sounds": [
+        { "file": "prepare.wav", "line": "Prepare for battle!" }
+      ]
+    },
+    "annoyed": {
+      "sounds": [
+        { "file": "monsterkill.wav", "line": "Monster kill!" },
+        { "file": "ultrakill.wav", "line": "Ultra kill!" },
+        { "file": "megakill.wav", "line": "Mega kill!" }
+      ]
+    }
+  }
+}

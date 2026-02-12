@@ -14,7 +14,10 @@
         { "file": "Dominating.wav", "line": "Dominating!" },
         { "file": "Killing_Spree.wav", "line": "Killing spree!" },
         { "file": "Rampage.wav", "line": "Rampage!" },
-        { "file": "Unstoppable.wav", "line": "Unstoppable!" }
+        { "file": "Unstoppable.wav", "line": "Unstoppable!" },
+        { "file": "Double_Kill.wav", "line": "Double kill!" },
+        { "file": "MultiKill.wav", "line": "Multi kill!" },
+        { "file": "LudicrousKill.wav", "line": "Ludicrous kill!" }
       ]
     },
     "complete": {
