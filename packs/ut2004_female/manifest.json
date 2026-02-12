@@ -1,0 +1,56 @@
+{
+  "name": "ut2004_female",
+  "display_name": "UT2004 Announcer (Female)",
+  "categories": {
+    "greeting": {
+      "sounds": [
+        { "file": "Play.wav", "line": "Play!" },
+        { "file": "first_blood.wav", "line": "First blood!" },
+        { "file": "LockandLoad.wav", "line": "Lock and load!" }
+      ]
+    },
+    "acknowledge": {
+      "sounds": [
+        { "file": "Dominating.wav", "line": "Dominating!" },
+        { "file": "Killing_Spree.wav", "line": "Killing spree!" },
+        { "file": "Rampage.wav", "line": "Rampage!" },
+        { "file": "Unstoppable.wav", "line": "Unstoppable!" }
+      ]
+    },
+    "complete": {
+      "sounds": [
+        { "file": "You_Have_Won_the_Match.wav", "line": "You have won the match!" },
+        { "file": "Flawless_victory.wav", "line": "Flawless victory!" },
+        { "file": "GodLike.wav", "line": "Godlike!" }
+      ]
+    },
+    "error": {
+      "sounds": [
+        { "file": "You_Have_Lost_the_Match.wav", "line": "You have lost the match." },
+        { "file": "Humiliating_defeat.wav", "line": "Humiliating defeat." },
+        { "file": "Denied.wav", "line": "Denied!" }
+      ]
+    },
+    "permission": {
+      "sounds": [
+        { "file": "Base_under_attack.wav", "line": "Base is under attack!" },
+        { "file": "Headshot.wav", "line": "Headshot!" },
+        { "file": "LockOn.wav", "line": "Lock on!" }
+      ]
+    },
+    "resource_limit": {
+      "sounds": [
+        { "file": "sudden_death.wav", "line": "Sudden death!" }
+      ]
+    },
+    "annoyed": {
+      "sounds": [
+        { "file": "WhickedSick.wav", "line": "Wicked sick!" },
+        { "file": "HolyShit.wav", "line": "Holy shit!" },
+        { "file": "MonsterKill.wav", "line": "Monster kill!" },
+        { "file": "UltraKill.wav", "line": "Ultra kill!" },
+        { "file": "MegaKill.wav", "line": "Mega kill!" }
+      ]
+    }
+  }
+}
