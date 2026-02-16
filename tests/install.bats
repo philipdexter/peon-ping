@@ -74,7 +74,7 @@ print('OK')
   bash "$CLONE_DIR/install.sh" --target codex
   [ -f "$TEST_HOME/.codex/config.toml" ]
 
-  run rg -n "bash ~/.codex/hooks/peon-ping/peon.sh --codex-notify" "$TEST_HOME/.codex/config.toml"
+  run rg -n "\"bash\"|\"~/.codex/hooks/peon-ping/peon.sh\"|\"--codex-notify\"" "$TEST_HOME/.codex/config.toml"
   [ "$status" -eq 0 ]
 }
 
@@ -112,8 +112,10 @@ print('OK')
   bash "$CLONE_DIR/install.sh" --target codex
   bash "$CLONE_DIR/install.sh" --target codex
 
-  matches=$(rg -o "peon.sh --codex-notify" "$TEST_HOME/.codex/config.toml" | wc -l | tr -d ' ')
-  [ "$matches" -eq 1 ]
+  script_matches=$(rg -o "\"~/.codex/hooks/peon-ping/peon.sh\"" "$TEST_HOME/.codex/config.toml" | wc -l | tr -d ' ')
+  flag_matches=$(rg -o "\"--codex-notify\"" "$TEST_HOME/.codex/config.toml" | wc -l | tr -d ' ')
+  [ "$script_matches" -eq 1 ]
+  [ "$flag_matches" -eq 1 ]
 }
 
 @test "update preserves existing config for Claude and Codex installs" {

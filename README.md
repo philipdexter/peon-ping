@@ -143,7 +143,13 @@ bash ~/.claude/hooks/peon-ping/uninstall.sh --target both
 
 For Claude Code, `peon.sh` is registered as a hook for `SessionStart`, `UserPromptSubmit`, `Stop`, `Notification`, and `PermissionRequest`.
 
-For Codex, installer adds `notify = ["bash ~/.codex/hooks/peon-ping/peon.sh --codex-notify"]` to `~/.codex/config.toml`. Codex passes notification JSON as an argument, and peon-ping maps it to the same sound/notification pipeline.
+For Codex, installer adds this to `~/.codex/config.toml`:
+
+```toml
+notify = ["bash", "~/.codex/hooks/peon-ping/peon.sh", "--codex-notify"]
+```
+
+Codex passes notification JSON as an argument, and peon-ping maps it to the same sound/notification pipeline.
 
 Sound files are property of their respective publishers (Blizzard Entertainment, EA) and are included in the repo for convenience.
 

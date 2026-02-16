@@ -365,10 +365,9 @@ if [ "$INSTALL_CODEX" = true ]; then
 import json
 import os
 import re
-import tomllib
 
 config_path = os.path.expanduser('~/.codex/config.toml')
-notify_cmd = 'bash ~/.codex/hooks/peon-ping/peon.sh --codex-notify'
+notify_values = ['bash', '~/.codex/hooks/peon-ping/peon.sh', '--codex-notify']
 
 if os.path.exists(config_path):
     text = open(config_path, 'r', encoding='utf-8').read()
@@ -377,20 +376,6 @@ else:
 
 pattern = re.compile(r'(?ms)^\s*notify\s*=\s*\[(.*?)\]\s*\n?')
 match = pattern.search(text)
-
-notify_values = []
-if match:
-    snippet = 'notify = [' + match.group(1) + ']'
-    try:
-        parsed = tomllib.loads(snippet)
-        values = parsed.get('notify', [])
-        if isinstance(values, list):
-            notify_values = [str(v) for v in values]
-    except Exception:
-        notify_values = []
-
-if notify_cmd not in notify_values:
-    notify_values.append(notify_cmd)
 
 notify_block = 'notify = [\n' + ''.join(f'  {json.dumps(v)},\n' for v in notify_values) + ']\n'
 

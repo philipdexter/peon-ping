@@ -137,7 +137,6 @@ import re
 import tomllib
 
 config_path = os.path.expanduser('~/.codex/config.toml')
-notify_cmd = 'bash ~/.codex/hooks/peon-ping/peon.sh --codex-notify'
 text = open(config_path, 'r', encoding='utf-8').read()
 
 pattern = re.compile(r'(?ms)^\s*notify\s*=\s*\[(.*?)\]\s*\n?')
@@ -158,18 +157,17 @@ except Exception:
     notify_values = []
 
 before = list(notify_values)
-notify_values = [v for v in notify_values if v != notify_cmd]
+is_peon_notify = (
+    notify_values == ['bash', '~/.codex/hooks/peon-ping/peon.sh', '--codex-notify']
+    or notify_values == ['bash ~/.codex/hooks/peon-ping/peon.sh --codex-notify']
+)
 
-if before == notify_values:
+if not is_peon_notify:
     print('No peon notify command found in Codex config.toml')
     raise SystemExit(0)
 
-if notify_values:
-    notify_block = 'notify = [\n' + ''.join(f'  {json.dumps(v)},\n' for v in notify_values) + ']\n'
-    text = text[:match.start()] + notify_block + text[match.end():]
-else:
-    # Remove notify key entirely when no commands remain.
-    text = text[:match.start()] + text[match.end():]
+# Remove notify key entirely when it belongs to peon-ping.
+text = text[:match.start()] + text[match.end():]
 
 with open(config_path, 'w', encoding='utf-8') as f:
     f.write(text)

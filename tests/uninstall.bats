@@ -54,7 +54,7 @@ print('OK')
   [ -d "$CLAUDE_INSTALL_DIR" ]
   [ ! -d "$CODEX_INSTALL_DIR" ]
 
-  run rg -n "peon.sh --codex-notify" "$TEST_HOME/.codex/config.toml"
+  run rg -n "~/.codex/hooks/peon-ping/peon.sh|--codex-notify" "$TEST_HOME/.codex/config.toml"
   [ "$status" -ne 0 ]
 }
 
@@ -77,6 +77,6 @@ for event, entries in hooks.items():
 print('OK')
 "
 
-  run rg -n "peon.sh --codex-notify" "$TEST_HOME/.codex/config.toml"
+  run rg -n "~/.codex/hooks/peon-ping/peon.sh|--codex-notify" "$TEST_HOME/.codex/config.toml"
   [ "$status" -ne 0 ]
 }
