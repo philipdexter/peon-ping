@@ -1,5 +1,5 @@
 #!/bin/bash
-# peon-ping: Warcraft III Peon voice lines for Claude Code hooks
+# peon-ping: Warcraft III Peon voice lines for Claude Code hooks + Codex notify
 # Replaces notify.sh — handles sounds, tab titles, and notifications
 set -uo pipefail
 
@@ -18,7 +18,8 @@ detect_platform() {
 }
 PLATFORM=$(detect_platform)
 
-PEON_DIR="${CLAUDE_PEON_DIR:-$HOME/.claude/hooks/peon-ping}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"
+PEON_DIR="${CLAUDE_PEON_DIR:-${PEON_DIR:-${SCRIPT_DIR:-$HOME/.claude/hooks/peon-ping}}}"
 CONFIG="$PEON_DIR/config.json"
 STATE="$PEON_DIR/.state.json"
 
@@ -131,9 +132,13 @@ terminal_is_focused() {
   esac
 }
 
-# --- CLI subcommands (must come before INPUT=$(cat) which blocks on stdin) ---
+# --- CLI subcommands (must come before INPUT parsing which may block on stdin) ---
 PAUSED_FILE="$PEON_DIR/.paused"
+HOOK_MODE="claude"
 case "${1:-}" in
+  --codex-notify)
+    HOOK_MODE="codex"
+    shift ;;
   --pause)   touch "$PAUSED_FILE"; echo "peon-ping: sounds paused"; exit 0 ;;
   --resume)  rm -f "$PAUSED_FILE"; echo "peon-ping: sounds resumed"; exit 0 ;;
   --toggle)
@@ -239,7 +244,15 @@ HELPEOF
     echo "Run 'peon --help' for usage." >&2; exit 1 ;;
 esac
 
-INPUT=$(cat)
+if [ "$HOOK_MODE" = "codex" ]; then
+  if [ $# -gt 0 ]; then
+    INPUT="$1"
+  else
+    INPUT=$(cat)
+  fi
+else
+  INPUT=$(cat)
+fi
 
 # Debug log (uncomment to troubleshoot)
 # echo "$(date): peon hook — $INPUT" >> /tmp/peon-ping-debug.log
@@ -281,13 +294,30 @@ cat_enabled = {}
 for c in ['greeting','acknowledge','complete','error','permission','resource_limit','annoyed']:
     cat_enabled[c] = str(cats.get(c, True)).lower() == 'true'
 
-# --- Parse event JSON from stdin ---
-event_data = json.load(sys.stdin)
+# --- Parse event JSON ---
+raw_input = sys.stdin.read()
+event_data = json.loads(raw_input)
 event = event_data.get('hook_event_name', '')
 ntype = event_data.get('notification_type', '')
 cwd = event_data.get('cwd', '')
 session_id = event_data.get('session_id', '')
 perm_mode = event_data.get('permission_mode', '')
+is_codex = False
+
+# Codex notify payload currently looks like:
+# { \"type\": \"agent-turn-complete\" }
+if not event and event_data.get('type'):
+    is_codex = True
+    codex_type = event_data.get('type', '')
+    if codex_type == 'agent-turn-complete':
+        event = 'Stop'
+    else:
+        print('PEON_EXIT=true')
+        sys.exit(0)
+    # Codex payload does not currently include cwd/session_id.
+    cwd = os.getcwd()
+    session_id = ''
+    perm_mode = ''
 
 # --- Load state ---
 try:
@@ -321,9 +351,10 @@ if pack_rotation:
         state_dirty = True
 
 # --- Project name ---
-project = cwd.rsplit('/', 1)[-1] if cwd else 'claude'
+default_project = 'codex' if is_codex else 'claude'
+project = cwd.rsplit('/', 1)[-1] if cwd else default_project
 if not project:
-    project = 'claude'
+    project = default_project
 project = re.sub(r'[^a-zA-Z0-9 ._-]', '', project)
 
 # --- Event routing ---

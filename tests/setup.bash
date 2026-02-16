@@ -159,6 +159,14 @@ run_peon() {
   PEON_STDERR=$(cat "$TEST_DIR/stderr.log" 2>/dev/null)
 }
 
+# Helper: run peon.sh in Codex notify mode (payload is passed as argv[1])
+run_peon_codex() {
+  local json="$1"
+  bash "$PEON_SH" --codex-notify "$json" 2>"$TEST_DIR/stderr.log"
+  PEON_EXIT=$?
+  PEON_STDERR=$(cat "$TEST_DIR/stderr.log" 2>/dev/null)
+}
+
 # Helper: check if afplay was called
 afplay_was_called() {
   [ -f "$TEST_DIR/afplay.log" ] && [ -s "$TEST_DIR/afplay.log" ]

@@ -2,9 +2,9 @@
 
 ![macOS](https://img.shields.io/badge/macOS-blue) ![WSL2](https://img.shields.io/badge/WSL2-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Claude Code](https://img.shields.io/badge/Claude_Code-hook-ffab01)
+![Claude Code](https://img.shields.io/badge/Claude_Code-hook-ffab01) ![Codex](https://img.shields.io/badge/Codex-notify-10a37f)
 
-**Your Peon pings you when Claude Code needs attention.**
+**Your Peon pings you when Claude Code or Codex needs attention.**
 
 Claude Code doesn't notify you when it finishes or needs permission. You tab away, lose focus, and waste 15 minutes getting back into flow. peon-ping fixes this with Warcraft III Peon voice lines — so you never miss a beat, and your terminal sounds like Orgrimmar.
 
@@ -17,6 +17,18 @@ curl -fsSL https://raw.githubusercontent.com/tonyyont/peon-ping/main/install.sh 
 ```
 
 One command. Takes 10 seconds. macOS and WSL2 (Windows). Re-run to update (sounds and config preserved).
+
+Optional target selection:
+
+```bash
+# Auto-detect installed apps (~/.claude and/or ~/.codex) [default]
+bash install.sh
+
+# Explicit targets
+bash install.sh --target claude
+bash install.sh --target codex
+bash install.sh --target both
+```
 
 ## What you'll hear
 
@@ -55,7 +67,10 @@ Pausing mutes sounds and desktop notifications instantly. Persists across sessio
 
 ## Configuration
 
-Edit `~/.claude/hooks/peon-ping/config.json`:
+Edit either config file (same format):
+
+- `~/.claude/hooks/peon-ping/config.json`
+- `~/.codex/hooks/peon-ping/config.json`
 
 ```json
 {
@@ -74,7 +89,7 @@ Edit `~/.claude/hooks/peon-ping/config.json`:
 - **volume**: 0.0–1.0 (quiet enough for the office)
 - **categories**: Toggle individual sound types on/off
 - **annoyed_threshold / annoyed_window_seconds**: How many prompts in N seconds triggers the easter egg
-- **pack_rotation**: Array of pack names (e.g. `["peon", "sc_kerrigan", "peasant"]`). Each Claude Code session randomly gets one pack from the list and keeps it for the whole session. Leave empty `[]` to use `active_pack` instead.
+- **pack_rotation**: Array of pack names (e.g. `["peon", "sc_kerrigan", "peasant"]`). Each session randomly gets one pack from the list and keeps it for the whole session. Leave empty `[]` to use `active_pack` instead.
 
 ## Sound packs
 
@@ -97,7 +112,7 @@ peon --pack                       # cycle to the next pack
 peon --packs                      # list all packs
 ```
 
-Or edit `~/.claude/hooks/peon-ping/config.json` directly:
+Or edit either target config directly:
 
 ```json
 { "active_pack": "ra2_soviet_engineer" }
@@ -108,18 +123,27 @@ Want to add your own pack? See [CONTRIBUTING.md](CONTRIBUTING.md).
 ## Uninstall
 
 ```bash
-bash ~/.claude/hooks/peon-ping/uninstall.sh
+# Remove Claude integration
+bash ~/.claude/hooks/peon-ping/uninstall.sh --target claude
+
+# Remove Codex integration
+bash ~/.codex/hooks/peon-ping/uninstall.sh --target codex
+
+# Remove both
+bash ~/.claude/hooks/peon-ping/uninstall.sh --target both
 ```
 
 ## Requirements
 
 - macOS (uses `afplay` and AppleScript) or WSL2 (uses PowerShell `MediaPlayer` and WinForms)
-- Claude Code with hooks support
+- Claude Code with hooks support and/or Codex with `notify` support
 - python3
 
 ## How it works
 
-`peon.sh` is a Claude Code hook registered for `SessionStart`, `UserPromptSubmit`, `Stop`, and `Notification` events. On each event it maps to a sound category, picks a random voice line (avoiding repeats), plays it via `afplay` (macOS) or PowerShell `MediaPlayer` (WSL2), and updates your Terminal tab title.
+For Claude Code, `peon.sh` is registered as a hook for `SessionStart`, `UserPromptSubmit`, `Stop`, `Notification`, and `PermissionRequest`.
+
+For Codex, installer adds `notify = ["bash ~/.codex/hooks/peon-ping/peon.sh --codex-notify"]` to `~/.codex/config.toml`. Codex passes notification JSON as an argument, and peon-ping maps it to the same sound/notification pipeline.
 
 Sound files are property of their respective publishers (Blizzard Entertainment, EA) and are included in the repo for convenience.
 

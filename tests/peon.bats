@@ -52,6 +52,20 @@ teardown() {
   [[ "$sound" == *"/packs/peon/sounds/Done"* ]]
 }
 
+@test "Codex agent-turn-complete notify plays a complete sound" {
+  run_peon_codex '{"type":"agent-turn-complete"}'
+  [ "$PEON_EXIT" -eq 0 ]
+  afplay_was_called
+  sound=$(afplay_sound)
+  [[ "$sound" == *"/packs/peon/sounds/Done"* ]]
+}
+
+@test "unknown Codex notify type exits cleanly" {
+  run_peon_codex '{"type":"something-else"}'
+  [ "$PEON_EXIT" -eq 0 ]
+  ! afplay_was_called
+}
+
 @test "UserPromptSubmit does NOT play sound normally" {
   run_peon '{"hook_event_name":"UserPromptSubmit","cwd":"/tmp/myproject","session_id":"s1","permission_mode":"default"}'
   [ "$PEON_EXIT" -eq 0 ]
